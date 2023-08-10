@@ -48,8 +48,44 @@ router.put('/editar/:id', connectBD, async function (req, res) {
   }
 });
 
+router.get('/obter/livros', connectBD, async function (req, res) {
+  try {
+    // #swagger.tags = ['Livros']
+    // #swagger.description = "Endpoint para obter os livros no banco de dados."
+    const respostaBD = await EsquemaLivros.find();
 
+    res.status(200).json({
+      status: "OK",
+      statusMensagem: "Livro obtido com sucesso",
+      resposta: respostaBD
+    })
 
+  } catch (error) {
+    return tratarErrosEsperados(res, error);
+  }
+});
 
+router.get('/obter/livros/:id', connectBD, async function (req, res) {
+  try {
+    // #swagger.tags = ['Livros']
+    // #swagger.description = "Endpoint para obter os livros no banco de dados."
+
+    let idBook = req.params.id;
+
+    const checkBook = await EsquemaLivros.findOne({ _id: idBook })
+    if (!checkBook) throw new Error(`Livro não encontrado.`)
+
+    const respostaBD = await EsquemaLivros.findOne({ _id: idBook });
+
+    res.status(200).json({
+      status: "OK",
+      statusMensagem: "Livro listado na resposta com sucesso",
+      resposta: respostaBD
+    })
+
+  } catch (error) {
+    return tratarErrosEsperados(res, error);
+  }
+});
 
 module.exports = router;
